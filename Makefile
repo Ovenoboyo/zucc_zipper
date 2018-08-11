@@ -6,7 +6,7 @@ DATE := $(shell date +"%m%d-%H%M")
 
 ZIP := $(NAME)-$(VERSION)-$(DATE).zip
 
-EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md*
+EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md* placeholder
 
 all: $(ZIP)
 
@@ -19,7 +19,7 @@ $(ZIP):
 
 clean:
 	@rm -vf "$(NAME)-"*.zip*
-	@rm -vf Image*
+	@rm -vf kernel/Image*
 	@echo "Done."
 
 sign:

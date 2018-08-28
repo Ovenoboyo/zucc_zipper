@@ -39,7 +39,6 @@ dump_boot;
 # begin ramdisk changes
 
 insert_line fstab.qcom "/dev/block/zram0" after "/dev/block/bootdevice/by-name/config		/frp			emmc	defaults							defaults" "/dev/block/zram0                                        none                swap    defaults                    zramsize=536870912,max_comp_streams=4"
-insert_line init.rc 'rev' before 'on early-init' 'import /init.rev.rc';
 # end ramdisk changes
 
 write_boot;

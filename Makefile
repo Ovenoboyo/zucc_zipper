@@ -1,3 +1,5 @@
+#!/bin/bash
+
 NAME ?= Zucc
 
 VERSION ?= Agama
@@ -6,16 +8,19 @@ DATE := $(shell date +"%m%d-%H%M")
 
 ZIP := $(NAME)-$(VERSION)-$(DATE).zip
 
-EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md* placeholder
+EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md* placeholder 
 
 all: $(ZIP)
 
 $(ZIP):
 	@echo "Creating ZIP: $(ZIP)"
+	@rm -f *.zip*
 	@zip -r9 "$@" . -x $(EXCLUDE)
 	@mkdir ../prev/$(DATE)
-	@mv Changelog.txt ../prev/$(DATE)/Changelog.txt
+	@cp Changelog.txt ../prev/$(DATE)/Changelog.txt
 	@cp "$(NAME)-"*.zip* ../prev/$(DATE)/
+	@cp "$(NAME)-"*.zip* /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/
+	@echo "$(ZIP)" > /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/zucc.txt
 
 clean:
 	@rm -vf "$(NAME)-"*.zip*

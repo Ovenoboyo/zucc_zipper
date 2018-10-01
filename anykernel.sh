@@ -38,7 +38,15 @@ dump_boot;
 
 # begin ramdisk changes
 
+    # init.rc
+insert_line init.rc 'zuc' before 'on early-init' 'import /init.zuc.rc';
+
+    # zram
 insert_line fstab.qcom "/dev/block/zram0" after "/dev/block/bootdevice/by-name/config		/frp			emmc	defaults							defaults" "/dev/block/zram0                                        none                swap    defaults                    zramsize=536870912,max_comp_streams=4"
+
+    #Add Spectrum
+#insert_line init.rc "import /init.spectrum.rc" after "import /init.trace.rc" "import /init.spectrum.rc";
+
 # end ramdisk changes
 
 write_boot;

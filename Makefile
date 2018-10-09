@@ -2,12 +2,12 @@
 
 NAME ?= Zucc
 
-VERSION ?= Inka
+VERSION ?= oof
 
 DATE := $(shell date +"%m%d-%H%M")
 
 #ZIP := $(NAME)-$(VERSION)-$(DATE).zip
-ZIP := $(NAME)-$(VERSION)-test.zip
+ZIP := $(NAME)-$(VERSION).zip
 
 EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md* placeholder 
 
@@ -27,6 +27,8 @@ $(ZIP):
 clean:
 	@rm -vf "$(NAME)-"*.zip*
 	@rm -vf kernel/Image*
+	@rm -vf treble/*
+	@rm -vf non-treble/*
 	@echo "Done."
 
 sign:

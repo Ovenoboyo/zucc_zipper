@@ -71,7 +71,7 @@ if [ -f /tmp/anykernel/version ]; then
 fi;
 ui_print " ";
 ui_print "AnyKernel2 by osm0sis @ xda-developers";
-ui_print " ^^ This guy is literally a lord ";
+ui_print " ";
 ui_print " ";
 ui_print " "
       ui_print "*===============================*";
@@ -112,11 +112,11 @@ for i in $($bb --list); do
 done;
 ui_print " ";
 ui_print " ";
-ui_print "*Hey there";
+ui_print "*Ezcuse me!!!!";
 ui_print " ";
-ui_print "*You seem like a "virgin" ";
+ui_print "*NANI THE F*CK!?!?!?!? ";
 ui_print " ";
-ui_print "*And i guess you'll die as one ";
+ui_print " ";
 ui_print " ";
 if [ $? != 0 -o -z "$(ls /tmp/anykernel/bin)" ]; then
   abort "Recovery busybox setup failed. Aborting...";
@@ -177,7 +177,8 @@ ui_print " ";
 ui_print " ";
 ui_print "*Hits the roof of zucc";
 ui_print "*This bad boy can fit so many";
-ui_print " bad memes and battery innit";
+ui_print " bad memes and bugs innit";
+ui_print " ";
 ui_print " ";
 ui_print "*======================*";
 ui_print "*       Zucc Succ      *";

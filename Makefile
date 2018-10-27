@@ -10,7 +10,7 @@ DATE := $(shell date +"%m%d-%H%M")
 ZIP := $(NAME)-$(VERSION).zip
 export ZIPTEST = $(NAME)-$(VERSION)
 
-EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md* placeholder 
+EXCLUDE := Makefile *.git* *.jar* *.zip* *.fuse* *.txt* *.md* placeholder *.py* 
 
 all: $(ZIP)
 

@@ -77,7 +77,7 @@ ui_print " "
       ui_print "*===============================*";
       ui_print "*         Zucc Karnul           *";
       ui_print "*===============================*";
-      ui_print "*           Inka v3             *";
+      ui_print "*            Oof v3             *";
       ui_print "* Device: Incy vincy spider     *";
       ui_print "*                               *";
       ui_print "*===============================*";
@@ -114,7 +114,7 @@ ui_print " ";
 ui_print " ";
 ui_print "*Ezcuse me!!!!";
 ui_print " ";
-ui_print "*NANI THE F*CK!?!?!?!? ";
+ui_print "*NANI THE F!?!?!?!? ";
 ui_print " ";
 ui_print " ";
 ui_print " ";
@@ -159,6 +159,9 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   mount -o ro,remount -t auto /vendor 2>/dev/null;
 fi;
 
+cp -rLf /tmp/anykernel/modules/fstab.qcom /system/vendor/etc/fstab.qcom;
+chmod 644 /system/vendor/etc/fstab.qcom;
+
 debugging;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
@@ -181,5 +184,5 @@ ui_print " bad memes and bugs innit";
 ui_print " ";
 ui_print " ";
 ui_print "*======================*";
-ui_print "*       Zucc Succ      *";
+ui_print "*      Zucc Kornel     *";
 ui_print "*======================*";

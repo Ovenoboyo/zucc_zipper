@@ -2,20 +2,32 @@
 # Ramdisk file for profile based kernel management
 # Implimentation inspired by Francos fku profiles
 
+# Initialization
+on property:sys.boot_completed=1
+    # Set default profile on first boot
+    exec u:r:init:s0 root root -- /init.spectrum.sh
+    exec u:r:su:s0 root root -- /init.spectrum.sh
+    # Enable Spectrum support
+    setprop spectrum.support 1
+    # Add kernel name
+    setprop persist.spectrum.kernel Zucc
+
 # Balance (default profile)
 on property:persist.spectrum.profile=0
 
 # Less throttling, more experience
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 652000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq 1689600
-    write /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq 1689600
 
+    #CPU enabled
+    write /sys/devices/system/cpu/cpu7/online 1
+    write /sys/devices/system/cpu/cpu6/online 1
+
+    # set default schedTune value for foreground/top-app (only affects EAS)
+    write /dev/stune/foreground/schedtune.prefer_idle 1
+    write /dev/stune/top-app/schedtune.prefer_idle 1
+    write /dev/stune/rt/schedtune.prefer_idle 1
 
 # Performance (based on DrunkSauce Lite)
 on property:persist.spectrum.profile=1
@@ -26,16 +38,25 @@ on property:persist.spectrum.profile=1
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "electroutil"
     write /sys/devices/system/cpu/cpufreq/schedutil/iowait_boost_enable 1
 
+    #CPU enabled
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+    write /sys/devices/system/cpu/cpu4/online 1
+    write /sys/devices/system/cpu/cpu5/online 1
+    write /sys/devices/system/cpu/cpu6/online 1
+    write /sys/devices/system/cpu/cpu7/online 1
 
     # Power efficient workques
     write /sys/module/workqueue/parameters/power_efficient Y
+
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
     write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 133000000
     write /sys/class/kgsl/kgsl-3d0/max_gpuclk 650000000
     write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 2
     write /sys/module/adreno_idler/parameters/adreno_idler_active 1
-    write /sys/class/leds/lcd-backlight/max_brightness 255
     write /sys/module/adreno_idler/parameters/adreno_idler_active 1
     write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 20
     write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 25
@@ -46,7 +67,6 @@ on property:persist.spectrum.profile=1
     write /dev/stune/top-app/schedtune.prefer_idle 1
     write /dev/stune/rt/schedtune.prefer_idle 1
 
-
 # Battery
 on property:persist.spectrum.profile=2
     # Power efficient workques
@@ -55,10 +75,11 @@ on property:persist.spectrum.profile=2
     # CPU values
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 652000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1401600
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
-    write /sys/devices/system/cpu/cpufreq/schedutil/up_rate_limit_us 250
-    write /sys/devices/system/cpu/cpufreq/schedutil/down_rate_limit_us 20000
-    write /sys/devices/system/cpu/cpufreq/schedutil/iowait_boost_enable 0
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "conservative"
+
+    #CPU enabled
+    write /sys/devices/system/cpu/cpu7/online 0
+    write /sys/devices/system/cpu/cpu6/online 0
 
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
@@ -68,7 +89,7 @@ on property:persist.spectrum.profile=2
     write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
     write /sys/module/adreno_idler/parameters/adreno_idler_active 1
     write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 25
-    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 10
+    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 5
     write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 8000
 
     # set default schedTune value for foreground/top-app (only affects EAS)
@@ -84,19 +105,29 @@ on property:persist.spectrum.profile=3
     # CPU values
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 652000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2016000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "performance"
     write /sys/devices/system/cpu/cpufreq/schedutil/up_rate_limit_us 350
     write /sys/devices/system/cpu/cpufreq/schedutil/down_rate_limit_us 1500
     write /sys/devices/system/cpu/cpufreq/schedutil/iowait_boost_enable 1
 
+    #CPU enabled
+    write /sys/devices/system/cpu/cpu0/online 1
+    write /sys/devices/system/cpu/cpu1/online 1
+    write /sys/devices/system/cpu/cpu2/online 1
+    write /sys/devices/system/cpu/cpu3/online 1
+    write /sys/devices/system/cpu/cpu4/online 1
+    write /sys/devices/system/cpu/cpu5/online 1
+    write /sys/devices/system/cpu/cpu6/online 1
+    write /sys/devices/system/cpu/cpu7/online 1
+
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
-    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 400000000
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 133000000
     write /sys/class/kgsl/kgsl-3d0/max_gpuclk 650000000
     write /sys/class/leds/lcd-backlight/max_brightness 255
     write /sys/module/adreno_idler/parameters/adreno_idler_active 0
 
     # set default schedTune value for foreground/top-app (only affects EAS)
-    write /dev/stune/foreground/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.prefer_idle 1
-    write /dev/stune/rt/schedtune.prefer_idle 1
+    write /dev/stune/foreground/schedtune.prefer_idle 0
+    write /dev/stune/top-app/schedtune.prefer_idle 0
+    write /dev/stune/rt/schedtune.prefer_idle 0

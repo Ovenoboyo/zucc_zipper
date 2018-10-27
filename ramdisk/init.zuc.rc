@@ -60,8 +60,17 @@ on property:sys.boot_completed=1
 
 # Run post-boot script after Qualcomm's post_boot shell script
 on property:init.svc.qcom-post-boot=stopped
-    # Reduce RGB values to 75% to reduce effect of screen retention issue on Tianma panel
-    write /sys/devices/platform/kcal_ctrl.0/kcal "192 192 192"
+    # Check panel_model
+    panel_model=`cat /sys/class/graphics/fb0/msm_fb_panel_info | grep panel_name`
+    default_color = `getprop vendor.display.enable_default_color_mode`
+     if [ "$panel_model" == "panel_name=td4310 fhdplus e7 video mode dsi panel" ]; then
+         if ["$default_color" == "1"]; then
+	        setprop vendor.display.enable_default_color_mode 0
+        fi
+        echo "1" > /sys/devices/platform/kcal_ctrl.0/kcal_enable
+        echo "236 249 256" > /sys/devices/platform/kcal_ctrl.0/kcal
+        echo "275" > /sys/devices/platform/kcal_ctrl.0/kcal_sat
+     fi
 
 # Less throttling, more experience
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"

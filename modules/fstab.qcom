@@ -16,6 +16,9 @@
 /dev/block/bootdevice/by-name/cust          /cust        ext4    ro,nosuid,nodev,barrier=1                   wait,check
 /devices/soc/7000000.ssusb/7000000.dwc3/xhci-hcd.0.auto*  /storage/usbotg  vfat  nosuid,nodev  wait,voldmanaged=usbotg:auto
 /dev/block/bootdevice/by-name/config        /frp         emmc    defaults                                    defaults
+
+/dev/block/zram0			    none	 swap	 defaults				zramsize=536870912
+
 /dev/block/bootdevice/by-name/misc          /misc        emmc    defaults                                    defaults
 /dev/block/bootdevice/by-name/cache         /cache       ext4    noatime,nosuid,nodev,barrier=1              wait
 /dev/block/bootdevice/by-name/cache         /cache       f2fs    noatime,nosuid,nodev,inline_xattr,flush_merge,data_flush            wait

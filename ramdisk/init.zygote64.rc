@@ -1,4 +1,0 @@
-service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server
-    class main
-    priority -20
-    user root

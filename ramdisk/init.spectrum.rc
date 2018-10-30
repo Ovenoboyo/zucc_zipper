@@ -15,10 +15,14 @@ on property:sys.boot_completed=1
 # Balance (default profile)
 on property:persist.spectrum.profile=0
 
-# Less throttling, more experience
+    # Power efficient workques
+    write /sys/module/workqueue/parameters/power_efficient Y
+
+    # Less throttling, more experience
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 652000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1689600
+    write /sys/devices/system/cpu/cpufreq/schedutil/iowait_boost_enable 1
 
     #CPU enabled
     write /sys/devices/system/cpu/cpu7/online 1
@@ -29,14 +33,24 @@ on property:persist.spectrum.profile=0
     write /dev/stune/top-app/schedtune.prefer_idle 1
     write /dev/stune/rt/schedtune.prefer_idle 1
 
+    # GPU
+    write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 133000000
+    write /sys/class/kgsl/kgsl-3d0/max_gpuclk 510000000
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
+    write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
+    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
+    write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 25
+    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 5
+    write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 8000
+
 # Performance (based on DrunkSauce Lite)
 on property:persist.spectrum.profile=1
 
   # CPU values
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 652000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2016000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "electroutil"
-    write /sys/devices/system/cpu/cpufreq/schedutil/iowait_boost_enable 1
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "pwrutilx"
 
     #CPU enabled
     write /sys/devices/system/cpu/cpu0/online 1
@@ -55,12 +69,11 @@ on property:persist.spectrum.profile=1
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
     write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 133000000
     write /sys/class/kgsl/kgsl-3d0/max_gpuclk 650000000
-    write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 2
+    write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
     write /sys/module/adreno_idler/parameters/adreno_idler_active 1
-    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
-    write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 20
-    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 25
-    write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 5000
+    write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 30
+    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 15
+    write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 6000
 
     # set default schedTune value for foreground/top-app (only affects EAS)
     write /dev/stune/foreground/schedtune.prefer_idle 1
@@ -87,7 +100,6 @@ on property:persist.spectrum.profile=2
     write /sys/class/kgsl/kgsl-3d0/max_gpuclk 400000000
     write /sys/module/adreno_idler/parameters/adreno_idler_active 1
     write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
-    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
     write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 25
     write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 5
     write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 8000
@@ -122,7 +134,7 @@ on property:persist.spectrum.profile=3
 
     # GPU
     write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
-    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 133000000
+    write /sys/class/kgsl/kgsl-3d0/devfreq/min_freq 400000000
     write /sys/class/kgsl/kgsl-3d0/max_gpuclk 650000000
     write /sys/class/leds/lcd-backlight/max_brightness 255
     write /sys/module/adreno_idler/parameters/adreno_idler_active 0

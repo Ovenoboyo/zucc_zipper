@@ -23,14 +23,19 @@ on charger
 on init
     # update cpusets now that processors are up
     write /dev/cpuset/top-app/cpus 0-3
-    write /dev/cpuset/foreground/cpus 3-6
-    write /dev/cpuset/foreground/boost/cpus 3-6
+    write /dev/cpuset/foreground/cpus 0-3
+    write /dev/cpuset/foreground/boost/cpus 0-3
     write /dev/cpuset/background/cpus 0-3
-    write /dev/cpuset/system-background/cpus 6-8
+    write /dev/cpuset/system-background/cpus 0-3
     # set default schedTune value for foreground/top-app (only affects EAS)
     write /dev/stune/foreground/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.boost 10
+    write /dev/stune/top-app/schedtune.boost 0
+    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
     write /dev/stune/top-app/schedtune.prefer_idle 1
+
+    #disable input boost
+    write /sys/module/cpu_boost/parameters/input_boost_enabled 0
+    write /sys/module/cpu_boost/parameters/sched_boost_on_input N
 
 on fs
     mount_all ./fstab.qcom --early
@@ -56,12 +61,12 @@ on late-fs
 
 # Run post-boot script after Qualcomm's post_boot shell script
 on property:init.svc.qcom-post-boot=stopped
-    write /sys/devices/platform/kcal_ctrl.0/kcal_enable 1
-    write /sys/devices/platform/kcal_ctrl.0/kcal 236 249 256
+    write /sys/devices/platform/kcal_ctrl.0/kcal "192 192 192"
 
 # Less throttling, more experience
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "electroutil"
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1689600
+    chmod 777 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 
 # VM
     write /proc/sys/vm/dirty_ratio "40"

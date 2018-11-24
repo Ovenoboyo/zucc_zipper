@@ -2,7 +2,7 @@
 
 NAME ?= Zucc
 
-VERSION ?= oof
+VERSION ?= notch
 
 DATE := $(shell date +"%m%d-%H%M")
 
@@ -19,7 +19,7 @@ $(ZIP):
 	@rm -f *.zip*
 	@rm -f /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/Zucc*
 	@zip -r9 "$@" . -x $(EXCLUDE)
-	@mkdir ../prev/$(DATE)
+	@mkdir ../prev/vince/$(DATE)
 	@cp Changelog.txt ../prev/$(DATE)/Changelog.txt
 	@cp "$(NAME)-"*.zip* ../prev/$(DATE)/
 	@cp "$(NAME)-"*.zip* /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/

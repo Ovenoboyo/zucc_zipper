@@ -9,15 +9,15 @@ do.devicecheck=1
 do.modules=0
 do.cleanup=1
 do.cleanuponabort=1
-device.name1=vince
-device.name2=Redmi Note 5
-device.name3=randi nude 5
-device.name4=randi nude 5 plus
-device.name5=Redmi Note 5 plus
+device.name1=mido
+device.name2=Redmi Note 4
+device.name3=randi nude 4
+device.name4=randi nude 4 plus
+device.name5=Redmi Note 4 plus
 '; } # end properties
 
 # shell variables
-block=/dev/block/bootdevice/by-name/boot;
+block=/dev/block/mmcblk0p21;
 is_slot_device=0;
 ramdisk_compression=auto;
 

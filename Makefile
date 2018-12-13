@@ -23,7 +23,7 @@ $(ZIP):
 	@cp Changelog.txt ../prev/$(DATE)/Changelog.txt
 	@cp "$(NAME)-"*.zip* ../prev/$(DATE)/
 	@cp "$(NAME)-"*.zip* /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/
-	@echo "$(ZIP)" > /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/zucc.txt
+	@echo "$(ZIP)" > /media/oveno/649AC4299AC3F6181/Userbot/Telegram-UserBot/zucc.txt
 
 test:
 	@echo "Creating ZIP-test"
@@ -34,8 +34,8 @@ test:
 	@python increment.py
 	@cp Changelog.txt ../prev/$(DATE)-test/Changelog.txt
 	@cp "$(NAME)-"*.zip* ../prev/$(DATE)-test/
-	@cp "$(NAME)-"*.zip* /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/
-	@mv zucc.txt /media/oveno/649AC4299AC3F6181/userbot/Telegram-UserBot/zucc.txt
+	@cp "$(NAME)-"*.zip* /media/oveno/649AC4299AC3F6181/Userbot/Telegram-UserBot
+	@mv zucc.txt /media/oveno/649AC4299AC3F6181/Userbot/Telegram-UserBot/zucc.txt
 
 clean:
 	@rm -vf "$(NAME)-"*.zip*

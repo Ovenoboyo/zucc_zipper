@@ -1,91 +1,24 @@
-import /init.spectrum.rc
-
-on init
-    # Disable UFS powersaving
-    write /sys/devices/soc/${ro.boot.bootdevice}/clkscale_enable 0
-    write /sys/devices/soc/${ro.boot.bootdevice}/clkgate_enable 0
-    write /sys/devices/soc/${ro.boot.bootdevice}/hibern8_on_idle_enable 0
-    write /sys/module/lpm_levels/parameters/sleep_disabled Y
-on property:sys.boot_completed=1
-    # Enable UFS powersaving
-    write /sys/devices/soc/${ro.boot.bootdevice}/clkscale_enable 1
-    write /sys/devices/soc/${ro.boot.bootdevice}/clkgate_enable 1
-    write /sys/devices/soc/${ro.boot.bootdevice}/hibern8_on_idle_enable 1
-    write /sys/module/lpm_levels/parameters/sleep_disabled N
-on charger
-    # Enable UFS powersaving
-    write /sys/devices/soc/${ro.boot.bootdevice}/clkscale_enable 1
-    write /sys/devices/soc/${ro.boot.bootdevice}/clkgate_enable 1
-    write /sys/devices/soc/${ro.boot.bootdevice}/hibern8_on_idle_enable 1
-    write /sys/class/typec/port0/port_type sink
-    write /sys/module/lpm_levels/parameters/sleep_disabled N
-
-on init
-    # update cpusets now that processors are up
-    write /dev/cpuset/top-app/cpus 0-3
-    write /dev/cpuset/foreground/cpus 0-3
-    write /dev/cpuset/foreground/boost/cpus 0-3
-    write /dev/cpuset/background/cpus 0-3
-    write /dev/cpuset/system-background/cpus 0-3
-    # set default schedTune value for foreground/top-app (only affects EAS)
-    write /dev/stune/foreground/schedtune.prefer_idle 1
-    write /dev/stune/top-app/schedtune.boost 0
-    write /sys/module/cpu_boost/parameters/dynamic_stune_boost 10
-    write /dev/stune/top-app/schedtune.prefer_idle 1
-
-    #disable input boost
-    write /sys/module/cpu_boost/parameters/input_boost_enabled 0
-    write /sys/module/cpu_boost/parameters/sched_boost_on_input N
-
+on init	
+    # Less throttling, more experience (CPU)
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "electroutil"
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2016000
+    chmod 777 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	
+    # Less throttling, more experience (GPU)	
+    write /sys/class/devfreq/1c00000.qcom,kgsl-3d0/max_freq 650000000
+	
 on fs
     mount_all ./fstab.qcom --early
 
-on late-fs
-    # Start services for bootanim
-    start surfaceflinger
-    start bootanim
-    start configstore-hal-1-0
-    start gralloc-2-0
-
-    mount_all ./fstab.qcom --late
-
-  # boot time fs tune
-    # boot time fs tune
-    write /sys/block/sda/queue/iostats 0
-    write /sys/block/sda/queue/scheduler bfq
-    write /sys/block/sda/queue/iosched/slice_idle 0
-    write /sys/block/sda/queue/read_ahead_kb 2048
-    write /sys/block/sda/queue/nr_requests 256
-    write /sys/block/dm-0/queue/read_ahead_kb 2048
-    write /sys/block/dm-1/queue/read_ahead_kb 2048
+    # Set default profile on first boot
+    exec u:r:init:s0 root root -- /init.zuc.sh
+    exec u:r:su:s0 root root -- /init.zuc.sh
 
 # Run post-boot script after Qualcomm's post_boot shell script
 on property:init.svc.qcom-post-boot=stopped
     write /sys/devices/platform/kcal_ctrl.0/kcal "192 192 192"
     write /sys/kernel/sound_control/headphone_gain "0 0"
     write /sys/kernel/sound_control/speaker_gain "0"
-
-# Less throttling, more experience
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "schedutil"
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1689600
-    chmod 777 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-
-# Adreno Idler
-    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
-    write /sys/class/kgsl/kgsl-3d0/devfreq/adrenoboost 0
-    write /sys/module/adreno_idler/parameters/adreno_idler_active 1
-    write /sys/module/adreno_idler/parameters/adreno_idler_downdifferential 25
-    write /sys/module/adreno_idler/parameters/adreno_idler_idlewait 5
-    write /sys/module/adreno_idler/parameters/adreno_idler_idleworkload 6000
-
-# VM
-    write /proc/sys/vm/dirty_ratio "40"
-    write /proc/sys/vm/dirty_background_ratio "10"
-    write /proc/sys/vm/swappiness "40"
-    write /proc/sys/vm/overcommit_ratio "30"
-
-# FP_BOOST
-    write /sys/kernel/fp_boost/enabled 1
 
 on property:sys.boot_completed=1
    # Enable ZRAM on boot_complete

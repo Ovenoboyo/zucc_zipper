@@ -13,7 +13,7 @@ ui_print() {
   done;
 }
 show_progress() { echo "progress $1 $2" > $OUTFD; }
-file_getprop() { $bb grep "^$2=" "$1" | $bb cut -d= -f2; }
+file_getprop() { grep "^$2=" "$1" | cut -d= -f2; }
 if [ ! "$(getprop 2>/dev/null)" ]; then
   getprop() {
     local propval="$(file_getprop /default.prop $1 2>/dev/null)";
@@ -26,19 +26,9 @@ debugging() {
   case $(basename "$ZIPFILE" .zip) in
     *-debugging)
       ui_print " ";
-      ui_print "Creating debugging archive in zip directory...";
       $bb tar -czvf "$DIR/anykernel2-$(date +%Y-%m-%d_%H%M%S)-debug.tgz" /tmp/*;
     ;;
   esac;
-}
-unmount_all() {
-  (umount /system;
-  if [ -d /system_root -a ! -f /system/build.prop ]; then
-    umount /system_root;
-  fi;
-  umount /system;
-  umount /vendor;
-  umount /data) 2>/dev/null;
 }
 abort() {
   ui_print "$*";
@@ -46,31 +36,25 @@ abort() {
   if [ ! -f /tmp/anykernel/anykernel.sh -o "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanuponabort 2>/dev/null)" == 1 ]; then
     cleanup;
   fi;
-  unmount_all;
+  umount /system;
+  umount /vendor 2>/dev/null;
+  umount /data 2>/dev/null;
   exit 1;
 }
-ui_print " ";
-ui_print "AnyKernel2 by osm0sis @ xda-developers";
-ui_print " ";
-ui_print " ";
-ui_print " "
-      ui_print "*===============================*";
-      ui_print "*         Zucc Karnul           *";
-      ui_print "*===============================*";
-      ui_print "*           Notch v4            *";
-      ui_print "* Device: Vince                 *";
-      ui_print "*                               *";
-      ui_print "*===============================*";
-ui_print " ";
-ui_print " ";
+initclean() {
+    rm -f /init.zuc.* /init.spectrum.*
+}
+
+
 show_progress 1.34 4;
 ui_print " ";
 cleanup;
+initclean;
 mkdir -p /tmp/anykernel/bin;
 cd /tmp/anykernel;
 unzip -o "$ZIPFILE";
 if [ $? != 0 -o -z "$(ls /tmp/anykernel/tools)" ]; then
-  abort "Unzip failed. Aborting...";
+  abort "Shits gone wrong, mate. Aborting...";
 fi;
 bb=/tmp/anykernel/tools/busybox;
 chmod 755 $bb;
@@ -83,106 +67,117 @@ if [ -f /tmp/anykernel/banner ]; then
   ui_print " ";
   ui_print " ";
 fi;
-
-unmount_all;
-$bb mount -o ro -t auto /system;
-$bb mount -o ro -t auto /vendor 2>/dev/null;
-$bb mount /data 2>/dev/null;
+if [ -f /tmp/anykernel/version ]; then
+  ui_print " ";
+  ui_print "$(cat /tmp/anykernel/version)";
+  ui_print " ";
+fi;
+ui_print " ";
+ui_print "AnyKernel2 by osm0sis @ xda-developers";
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print "          )                       ";
+ui_print "       ( /(                       ";
+ui_print "       )\())    (                 ";
+ui_print "      ((_)\    ))\    (      (    ";
+ui_print "       _((_)  /((_)   )\     )\   ";
+ui_print "      |_  /  (_))(   ((_)   ((_)  ";
+ui_print "       / /   | || |  / _|   / _|  ";
+ui_print "      /___|   \_,_|  \__|   \__|  ";                          
+ui_print " ";
+ui_print " ";
+umount /system 2>/dev/null;
+umount /vendor 2>/dev/null;
+mount -o ro -t auto /system;
+mount -o ro -t auto /vendor 2>/dev/null;
+mount /data 2>/dev/null;
 test -f /system/system/build.prop && root=/system;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.devicecheck)" == 1 ]; then
-  device="$(getprop ro.product.device)";
-  product="$(getprop ro.build.product)";
   for i in 1 2 3 4 5; do
     testname="$(file_getprop /tmp/anykernel/anykernel.sh device.name$i)";
-    test "$testname" || break;
-    if [ "$device" == "$testname" -o "$product" == "$testname" ]; then
-      ui_print "$testname";
+    if [ "$(getprop ro.product.device)" == "$testname" -o "$(getprop ro.build.product)" == "$testname" ]; then
       match=1;
-      break;
     fi;
   done;
-  ui_print " ";
   if [ "$match" != 1 ]; then
-    abort "Atleast get the right device. Abortin...";
+    abort "Boi atleast get the device right. Aborting...";
+  fi;
+  if [ "$(file_getprop /system/build.prop ro.treble.enabled)" == "true" ]; then
+    dtb=/tmp/anykernel/treble;
+  else
+    dtb=/tmp/anykernel/non-treble;
   fi;
 fi;
 
-if [ -f /system/system/build.prop ]; then
-  umount /system;
-  umount /system 2>/dev/null;
-  mkdir /system_root 2>/dev/null;
-  $bb mount -o ro -t auto /dev/block/bootdevice/by-name/system /system_root;
-  $bb mount -o bind /system_root/system /system;
-  unset root;
-fi;
-savedpath="$LD_LIBRARY_PATH";
-savedpre="$LD_PRELOAD";
-unset LD_LIBRARY_PATH;
-unset LD_PRELOAD;
-
-ui_print " ";
-ui_print " ";
-ui_print "*Dislike Youtube Rewind plox";
-ui_print " ";
-ui_print "*And subscribe to pewdiepie :) ";
-ui_print " ";
-ui_print " ";
-ui_print " ";
 for i in $($bb --list); do
   $bb ln -s $bb /tmp/anykernel/bin/$i;
 done;
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print "*Look out zucc, you're on fire";
+ui_print "*Ohno it can't hear us";
+ui_print "*Its wearing airpods";
+ui_print " ";
+ui_print " ";
+ui_print " ";
 if [ $? != 0 -o -z "$(ls /tmp/anykernel/bin)" ]; then
   abort "Recovery busybox setup failed. Aborting...";
+fi;
+cat /tmp/anykernel/kernel/Image.gz $dtb/*.dtb > /tmp/anykernel/Image.gz-dtb;
+if [ $? != "0" ]; then
+  abort;
 fi;
 PATH="/tmp/anykernel/bin:$PATH" $bb ash /tmp/anykernel/anykernel.sh $2;
 if [ $? != "0" ]; then
   abort;
 fi;
 
+
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
-  ui_print " ";
-  ui_print "Pushing modules...";
-  $bb mount -o rw,remount -t auto /system;
-  $bb mount -o rw,remount -t auto /vendor 2>/dev/null;
+  mount -o rw,remount -t auto /system;
+  mount -o rw,remount -t auto /vendor 2>/dev/null;
   cd /tmp/anykernel/modules;
   for module in $(find . -name '*.ko'); do
-    if [ ! -e /$module ]; then
+    case $module in
+      */system/*) modtarget=$root/$module;;
+      *) modtarget=/$module;;
+    esac;
+    if [ ! -e $modtarget ]; then
       case $module in
         */vendor/*) mod=vendor;;
         *) mod=system;;
       esac;
     fi;
-    if [ "$($bb mount | $bb grep " $(echo $module | $bb cut -c2-) ")" ]; then
-      $bb mount -o rw,remount -t auto /$module;
-    fi;
-    mkdir -p $(dirname /$module);
-    $bb cp -rLf $module /$module;
-    $bb chown 0:0 /$module;
-    $bb chmod 644 /$module;
+    mkdir -p $(dirname $modtarget);
+    $bb cp -rLf $module $modtarget;
+    $bb chown 0:0 $modtarget;
+    $bb chmod 644 $modtarget;
     if [ "$mod" ]; then
-      chcon "u:object_r:${mod}_file:s0" /$module;
-    fi;
-    if [ "$($bb mount | $bb grep " $(echo $module | $bb cut -c2-) ")" ]; then
-      $bb mount -o ro,remount -t auto /$module;
+      chcon "u:object_r:${mod}_file:s0" $modtarget;
     fi;
   done;
   cd /tmp/anykernel;
-  $bb mount -o ro,remount -t auto /system;
-  $bb mount -o ro,remount -t auto /vendor 2>/dev/null;
+  mount -o ro,remount -t auto /system;
+  mount -o ro,remount -t auto /vendor 2>/dev/null;
 fi;
+
+cp -rLf /tmp/anykernel/modules/fstab.qcom /vendor/etc/fstab.qcom;
+chmod 644 /vendor/etc/fstab.qcom;
 
 debugging;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
   cleanup;
 fi;
-
-test "$savedpath" && export LD_LIBRARY_PATH="$savedpath";
-test "$savedpre" && export LD_PRELOAD="$savedpre";
-
-unmount_all;
-
+umount /system;
+umount /vendor 2>/dev/null;
+umount /data 2>/dev/null;
 ui_print " ";
 ui_print " ";
 ui_print " ";
@@ -190,12 +185,21 @@ ui_print " ";
 ui_print " ";
 ui_print " ";
 ui_print " ";
+ui_print "*Journalist: Gets kicked out";
+ui_print "*People with anime profiles:";
+ui_print " L";
+ui_print " E ";
+ui_print " A ";
+ui_print " R ";
+ui_print " N ";
 ui_print " ";
-ui_print "*Touches hot kettle";
-ui_print "";
-ui_print "Will Smith: Ahh that's hot, that's hot!";
+ui_print " T ";
+ui_print " O ";
 ui_print " ";
-ui_print " ";
+ui_print " C ";
+ui_print " O ";
+ui_print " D ";
+ui_print " E ";
 ui_print "*======================*";
 ui_print "*      Zucc Kornel     *";
 ui_print "*======================*";

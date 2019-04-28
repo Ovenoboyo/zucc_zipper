@@ -120,9 +120,10 @@ ui_print " ";
 ui_print " ";
 ui_print " ";
 ui_print " ";
-ui_print "*Look out zucc, you're on fire";
-ui_print "*Ohno it can't hear us";
-ui_print "*Its wearing airpods";
+ui_print "*The logo reminds me of Notre Dame";
+ui_print "*Well, only sbeve can save us now";
+ui_print " ";
+ui_print " ";
 ui_print " ";
 ui_print " ";
 ui_print " ";
@@ -167,9 +168,6 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
   mount -o ro,remount -t auto /vendor 2>/dev/null;
 fi;
 
-cp -rLf /tmp/anykernel/modules/fstab.qcom /vendor/etc/fstab.qcom;
-chmod 644 /vendor/etc/fstab.qcom;
-
 debugging;
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
@@ -185,21 +183,19 @@ ui_print " ";
 ui_print " ";
 ui_print " ";
 ui_print " ";
-ui_print "*Journalist: Gets kicked out";
-ui_print "*People with anime profiles:";
-ui_print " L";
-ui_print " E ";
-ui_print " A ";
-ui_print " R ";
-ui_print " N ";
+ui_print "*Wew its been lsldldsghlzjbldsuiagblSIbgdibzgsdlgblzdiglsgligd";
 ui_print " ";
-ui_print " T ";
-ui_print " O ";
 ui_print " ";
-ui_print " C ";
-ui_print " O ";
-ui_print " D ";
-ui_print " E ";
+ui_print "              ********Alert*********";
+ui_print "*The developer of Zucc has been kidnapped by duolingo";
+ui_print "*Complete your spanish lessons or I won't let him go";
+ui_print "*Oh also, if you can't find the family....";
+ui_print "*You better complete your french lessons";
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print " ";
+ui_print " ";
 ui_print "*======================*";
 ui_print "*      Zucc Kornel     *";
 ui_print "*======================*";

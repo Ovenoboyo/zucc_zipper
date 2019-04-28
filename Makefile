@@ -2,9 +2,9 @@
 
 NAME ?= Zucc
 
-VERSIONO ?= v6.0
+VERSIONO ?= v7.0
 
-VERSION ?= Airpods
+VERSION ?= Gae
 
 DATE := $(shell date +"%m%d-%H%M")
 

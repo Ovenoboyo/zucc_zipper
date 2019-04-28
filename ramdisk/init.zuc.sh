@@ -20,6 +20,9 @@ echo "10" > /sys/module/adreno_idler/parameters/adreno_idler_downdifferential
 echo "30" > /sys/module/adreno_idler/parameters/adreno_idler_idlewait
 echo "2000" > /sys/module/adreno_idler/parameters/adreno_idler_idleworkload
 
+echo "400000000" > /sys/module/governor_msm_adreno_tz/parameters/boost_freq
+echo "750" > /sys/module/governor_msm_adreno_tz/parameters/boost_duration
+
 echo "0" > /sys/module/msm_hotplug/msm_enabled
 echo "1500" > /sys/module/msm_hotplug/boost_lock_duration
 echo "5" > /sys/module/msm_hotplug/cpus_boosted
